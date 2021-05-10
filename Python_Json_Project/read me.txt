@@ -1,5 +1,0 @@
-This Python Project does the following:
-* Read a cocktail.json file from a link
-* Converts it to python object
-* Take out the needed information
-* converts back it to json.
