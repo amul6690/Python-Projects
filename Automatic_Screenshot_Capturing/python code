@@ -1,0 +1,40 @@
+
+import requests
+from bs4 import BeautifulSoup
+import re
+import time
+from selenium import webdriver
+
+def take_screenshots(url):
+    newlist = fetch_all_anchor_tags(url)
+    for x in newlist:
+        print(x)
+
+    a = 0
+    for url in newlist:
+        a += 1
+        driver = webdriver.Chrome('chromedriver path')  # Optional argument, if not specified will search path.
+        driver.get(url)
+        driver.save_screenshot("screen" + str(a) + '.png')
+        driver.quit()
+
+def fetch_all_anchor_tags(url):
+    
+    # Getting html from the url
+    req = requests.get(url)
+    soup = BeautifulSoup(req.content, 'html.parser')
+
+    # Looping through the anchor tags to get all hrefs
+    links_with_text = []
+    for a in soup.findAll('a', attrs={'href': re.compile("^https://")}, href = True): 
+        if a.text: 
+            links_with_text.append(a['href'])
+
+    # Applying regular expression to get all links that begin with https://
+    r = re.compile("^https://")
+    newlist = list(filter(r.match, links_with_text))
+    #print(newlist)
+    return newlist
+
+
+take_screenshots("https://techcrunch.com/")
